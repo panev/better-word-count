@@ -7,6 +7,8 @@ import {
   getSentenceCount,
   getWordCount,
 } from "../utils/StatUtils";
+import { sendStats } from "src/firebase/firebase";
+
 
 export default class StatsManager {
   private vault: Vault;
@@ -64,6 +66,8 @@ export default class StatsManager {
 
   async update(): Promise<void> {
     this.vault.adapter.write(STATS_FILE, JSON.stringify(this.vaultStats));
+    sendStats(JSON.stringify(this.vaultStats))
+      
   }
 
   async updateToday(): Promise<void> {

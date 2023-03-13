@@ -9,7 +9,7 @@ const TEST_VAULT = "test-vault/.obsidian/plugins/better-word-count";
 export default {
   input: "src/main.ts",
   output: {
-    dir: "dist/",
+    dir: "./",
     sourcemap: "inline",
     format: "cjs",
     exports: "default",
