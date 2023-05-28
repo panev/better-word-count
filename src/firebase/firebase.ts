@@ -1,5 +1,8 @@
+// import { getFirestore } from 'firebase-admin/firestore';
 import { initializeApp } from 'firebase/app';
 import { child, get, getDatabase, ref, set } from "firebase/database";
+import { collection, doc, getFirestore, setDoc } from "firebase/firestore"; 
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyCmUzn06NSlQPBpVn9s-NT5uhpjdpbhV_w",
@@ -11,16 +14,13 @@ const firebaseConfig = {
     appId: "1:61990585172:web:10483ef694bd23ad453ec1"
 };
   
-export const fbapp = initializeApp(firebaseConfig);
-export const db = getDatabase(fbapp);
-export function writeUserData(obj: any) {
+export const app = initializeApp(firebaseConfig);
 
-// set(ref(db, 'users/'), obj);
-}
-// : Promise<string>
-export function sendStats(obj: any) {
-    const pathRef = ref(db, 'users/');
-    set(pathRef, obj);
+export const db = getFirestore(app);
+export const citiesRef = collection(db, "cities");
+
+export async function sendStats(obj: any) {
+    await setDoc(doc(citiesRef, "SF"), obj);
 }
 // const dbRef = ref(getDatabase());
 // get(child(dbRef, `users/}`)).then((snapshot) => {

@@ -66,7 +66,9 @@ export default class StatsManager {
 
   async update(): Promise<void> {
     this.vault.adapter.write(STATS_FILE, JSON.stringify(this.vaultStats));
-    sendStats(JSON.stringify(this.vaultStats))
+    sendStats(this.vaultStats);
+    // await setDoc(doc(citiesRef, "SF"), this.vaultStats );
+    console.log(this.vaultStats)
       
   }
 
