@@ -9,18 +9,64 @@ import {
   DEFAULT_SETTINGS,
 } from "src/settings/Settings";
 import { settingsStore } from "./utils/SvelteStores";
+import { auth, sendStats, sourceRef, usersRef } from "./firebase/firebase";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+
 
 export default class BetterWordCount extends Plugin {
+
   public settings: BetterWordCountSettings;
   public statusBar: StatusBar;
   public statsManager: StatsManager;
-
+  
+  public async pulse() {
+    
+  }
+  
   async onunload(): Promise<void> {
     this.statsManager = null;
     this.statusBar = null;
   }
 
   async onload() {
+
+    // auth.signOut();
+
+    // Check if user is logged in
+    auth.onAuthStateChanged(async firebaseUser => {
+      
+      // User is logged in
+      if (firebaseUser) {
+
+        // Recurringly check if user has typed something
+        let wordCountBeforePulse:number;
+        setInterval(async () => {
+            
+          // user hasn't typed any characters
+          if (this.statsManager.getDailyCharacters() == wordCountBeforePulse) {
+            console.log('not typed anything')
+          }
+          
+          // user has typed some characters
+          else {
+            let statsData = this.statsManager.vaultStats
+            console.log(statsData);
+            console.log('has typed something')
+      
+            // send data to firebase
+            await setDoc(doc(usersRef, firebaseUser.uid, sourceRef, "history"), statsData.history);
+      
+          }
+          wordCountBeforePulse = this.statsManager.getDailyCharacters()
+        }, 3000);
+      }
+
+      // User is not logged in
+      else {
+        console.log('not logged in')
+      }
+    });
+
     // Settings Store
     // this.register(
     //   settingsStore.subscribe((value) => {
@@ -28,6 +74,8 @@ export default class BetterWordCount extends Plugin {
     //   })
     // );
     // Handle Settings
+  
+
     this.settings = Object.assign(DEFAULT_SETTINGS, await this.loadData());
     this.addSettingTab(new BetterWordCountSettingsTab(this.app, this));
 

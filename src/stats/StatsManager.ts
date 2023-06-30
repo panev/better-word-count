@@ -7,17 +7,17 @@ import {
   getSentenceCount,
   getWordCount,
 } from "../utils/StatUtils";
-import { sendStats } from "src/firebase/firebase";
 
 
 export default class StatsManager {
   private vault: Vault;
   private workspace: Workspace;
-  private vaultStats: VaultStatistics;
   private today: string;
+  public vaultStats: VaultStatistics;
   public debounceChange;
 
   constructor(vault: Vault, workspace: Workspace) {
+
     this.vault = vault;
     this.workspace = workspace;
     this.debounceChange = debounce(
@@ -66,9 +66,8 @@ export default class StatsManager {
 
   async update(): Promise<void> {
     this.vault.adapter.write(STATS_FILE, JSON.stringify(this.vaultStats));
-    sendStats(this.vaultStats);
+    // sendStats(this.vaultStats);
     // await setDoc(doc(citiesRef, "SF"), this.vaultStats );
-    console.log(this.vaultStats)
       
   }
 

@@ -13,3 +13,6 @@ test-vault/
 *.zip
 .DS_Store
 dist/
+
+# firebase
+/src/firebase/firebaseConfig.ts
