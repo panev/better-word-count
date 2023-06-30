@@ -18,6 +18,21 @@ export default class StatsManager {
 
   constructor(vault: Vault, workspace: Workspace) {
 
+    let wordCountBeforePulse:number;
+        setInterval(async () => {
+            
+          if (this.getDailyCharacters() == wordCountBeforePulse) {
+            console.log('not typed anything for 3 seconds')
+          }
+          
+          else {
+
+            this.vaultStats.history[this.today].seconds += 3;
+            
+          }
+          wordCountBeforePulse = this.getDailyCharacters()
+        }, 3000);
+
     this.vault = vault;
     this.workspace = workspace;
     this.debounceChange = debounce(
@@ -66,9 +81,6 @@ export default class StatsManager {
 
   async update(): Promise<void> {
     this.vault.adapter.write(STATS_FILE, JSON.stringify(this.vaultStats));
-    // sendStats(this.vaultStats);
-    // await setDoc(doc(citiesRef, "SF"), this.vaultStats );
-      
   }
 
   async updateToday(): Promise<void> {
@@ -90,6 +102,7 @@ export default class StatsManager {
       totalWords: totalWords,
       totalCharacters: totalCharacters,
       totalSentences: totalSentences,
+      seconds: 0
     };
 
     this.vaultStats.modifiedFiles = {};

@@ -58,7 +58,7 @@ export default class BetterWordCount extends Plugin {
       
           }
           wordCountBeforePulse = this.statsManager.getDailyCharacters()
-        }, 3000);
+        }, 30000);
       }
 
       // User is not logged in

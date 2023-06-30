@@ -13,6 +13,7 @@ export interface Day {
   totalWords: number;
   totalCharacters: number;
   totalSentences: number;
+  seconds: number;
 }
 
 export type ModifiedFiles = Record<string, FileStat>;
