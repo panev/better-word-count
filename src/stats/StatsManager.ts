@@ -19,19 +19,22 @@ export default class StatsManager {
   constructor(vault: Vault, workspace: Workspace) {
 
     let wordCountBeforePulse:number;
-        setInterval(async () => {
-            
-          if (this.getDailyCharacters() == wordCountBeforePulse) {
-            console.log('not typed anything for 3 seconds')
-          }
-          
-          else {
+    
+    setInterval(async () => {
 
-            this.vaultStats.history[this.today].seconds += 3;
-            
-          }
-          wordCountBeforePulse = this.getDailyCharacters()
-        }, 3000);
+      this.updateToday();
+        // console.log ('try to sync')
+      if (this.getDailyCharacters() == wordCountBeforePulse) {
+        console.log('not typed anything for 20 seconds')
+      }
+      
+      else {
+        this.vaultStats.history[this.today].seconds += 20;
+      }
+
+      wordCountBeforePulse = this.getDailyCharacters()
+
+    }, 20000);
 
     this.vault = vault;
     this.workspace = workspace;
@@ -88,7 +91,6 @@ export default class StatsManager {
       this.today = moment().format("YYYY-MM-DD");
       return;
     }
-
     this.today = moment().format("YYYY-MM-DD");
     const totalWords = await this.calcTotalWords();
     const totalCharacters = await this.calcTotalCharacters();
@@ -102,11 +104,13 @@ export default class StatsManager {
       totalWords: totalWords,
       totalCharacters: totalCharacters,
       totalSentences: totalSentences,
-      seconds: 0
+      seconds: 0,
+      date: this.today
     };
 
     this.vaultStats.modifiedFiles = {};
     this.vaultStats.history[this.today] = newDay;
+    
     await this.update();
   }
 

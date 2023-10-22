@@ -10,7 +10,8 @@ import {
 } from "src/settings/Settings";
 import { settingsStore } from "./utils/SvelteStores";
 import { auth, sendStats, sourceRef, usersRef } from "./firebase/firebase";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import moment from "moment";
 
 
 export default class BetterWordCount extends Plugin {
@@ -52,16 +53,28 @@ export default class BetterWordCount extends Plugin {
             let statsData = this.statsManager.vaultStats
             console.log(statsData);
             console.log('has typed something')
-      
+
+            const today = moment().format("YYYY-MM-DD");
+
             // send data to firebase
-            await setDoc(doc(usersRef, firebaseUser.uid, sourceRef, "history"), statsData.history);
-      
+            await setDoc(doc(usersRef, firebaseUser.uid, sourceRef, today), statsData.history[today]);
+
+            // Send old data
+            // const arrayOfObjects = Object.keys(statsData.history).map(key => statsData.history[key]);
+            // arrayOfObjects.forEach((element) => {
+            //   if (element.date) {
+            //     console.log(element.date)
+            //     setDoc(doc(usersRef, firebaseUser.uid, sourceRef, element.date), element);
+            //   }
+              
+            // })
+
           }
           wordCountBeforePulse = this.statsManager.getDailyCharacters()
-        }, 30000);
+        }, 60000);
       }
 
-      // User is not logged in
+      // User is not logged in 
       else {
         console.log('not logged in')
       }

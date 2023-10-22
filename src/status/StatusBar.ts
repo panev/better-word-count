@@ -1,5 +1,5 @@
 import { MetricCounter, MetricType } from "src/settings/Settings";
-import type BetterWordCount from "../main";
+import type BetterWordCount from "src/main";
 import {
   getWordCount,
   getCharacterCount,

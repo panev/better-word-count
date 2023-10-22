@@ -14,6 +14,7 @@ export interface Day {
   totalCharacters: number;
   totalSentences: number;
   seconds: number;
+  date: any;
 }
 
 export type ModifiedFiles = Record<string, FileStat>;
